@@ -101,25 +101,25 @@ class MergeSort : public Sorter<T>
     MergeSort() {};
     ~MergeSort() {};
 
-    void sort(std::vector<T> &arr)
+    void sort(std::vector<T> &arr, bool (*compare)(T &a, T &b))
     {
-        mergesort(arr, 0, arr.size()-1);
+        mergesort(arr, 0, arr.size()-1, (*compare));
     };
 
 
-    void mergesort(std::vector<T> &arr, int l, int r)
+    void mergesort(std::vector<T> &arr, int l, int r, bool (*compare)(T &a, T &b))
     {
         if (l < r) {
             int m = l + (r-l) / 2;
             
-            mergesort(arr, l, m);
-            mergesort(arr, m+1, r);
+            mergesort(arr, l, m, (*compare));
+            mergesort(arr, m+1, r, (*compare));
 
-            merge(arr, l, m, r);
+            merge(arr, l, m, r, (*compare));
         }
     }
 
-    void merge(std::vector<T> &arr, int l, int m, int r)
+    void merge(std::vector<T> &arr, int l, int m, int r, bool (*compare)(T &a, T &b))
     {
         std::vector<T> left;
         std::vector<T> right;
@@ -138,7 +138,7 @@ class MergeSort : public Sorter<T>
 
         while(i < leftMax && j < rightMax)
         {
-            if(left[i] <= right[j])
+            if((*compare)(left[i], right[j]))
             {
                 arr[k] = left[i];
                 i++;
