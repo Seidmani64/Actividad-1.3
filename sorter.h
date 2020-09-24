@@ -176,17 +176,17 @@ class QuickSort : public Sorter<T>
 
     void sort(std::vector<T> &arr, bool (*compare)(T &a, T &b))
     {
-        quicksort(arr, 0, arr.size()-1, compare);
+        quicksort(arr, 0, arr.size()-1, (*compare));
     };
 
     void quicksort(std::vector<T> &arr, int low, int high, bool (*compare)(T &a, T &b))
     {
-        if((*compare)(low, high))
+        if(low < high)
         {
-            int piv = partition(arr, low, high, compare);
+            int piv = partition(arr, low, high, (*compare));
 
-            quicksort(arr, low, piv - 1, compare);
-            quicksort(arr, piv + 1, high, compare);
+            quicksort(arr, low, piv - 1, (*compare));
+            quicksort(arr, piv + 1, high, (*compare));
         }
     };
 
