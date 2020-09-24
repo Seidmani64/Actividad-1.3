@@ -77,6 +77,32 @@ bool compareNameLessOrEqual(T &a, T &b)
     return false;
 }
 
+//Funcion para contar numero de registros por dia.
+template <typename T>
+void countDays(ADT<T> &ADT, int numberDay)
+{
+    string day = ADT.data[0][0];
+    int count = 1;
+    int currentNumberDay = 1;
+    for(int i = 0; i < ADT.data.size(); i++)
+    {
+        if(day == ADT.data[i][0])
+        {
+            count++;
+        }
+        else
+        {
+            if(currentNumberDay == numberDay)
+            {
+                 cout << "Number of records for day " << day << ": " << count << endl;
+                 break;
+            }
+            currentNumberDay++;
+            day = ADT.data[i][0];
+            count = 1;
+        }
+    }
+}
 
 //Main utilizado para hacer pruebas y encontrar las respuestas de las preguntas
 int main() 
@@ -184,6 +210,9 @@ cout<<"La cantidad de registros es de: "<<test.data.size()<<endl;
     int elementIdx2 = find.sequenceSearch(destnames,"protonmail.com", &compareNameLessThan); 
     cout<<elementIdx2<<endl;
     if(elementIdx2 >= 0){cout<<destnames[elementIdx2]<<endl;}
+
+    // Llamar funcion para contar los registros de cierto dia.
+    countDays(test, 2);
 
     return 0;
 }
