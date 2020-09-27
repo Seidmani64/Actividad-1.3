@@ -4,9 +4,9 @@
 #include "mytimer.h"
 #include <vector>
 #include<regex>
+#include <fstream>
 
 using namespace std;
-
 
 //Funcion para comparar valores de IP (A menor que B)
 template <typename T>
@@ -79,14 +79,14 @@ bool compareNameLessOrEqual(T &a, T &b)
 
 //Funcion para contar numero de registros por dia.
 template <typename T>
-void countDays(ADT<T> &ADT, int numberDay)
+void countDays(vector<T> &ADT, int numberDay)
 {
-    string day = ADT.data[0][0];
+    string day = ADT[0].getDate();
     int count = 1;
     int currentNumberDay = 1;
-    for(int i = 0; i < ADT.data.size(); i++)
+    for(int i = 0; i < ADT.size(); i++)
     {
-        if(day == ADT.data[i][0])
+        if(day == ADT[i].getDate())
         {
             count++;
         }
@@ -98,7 +98,7 @@ void countDays(ADT<T> &ADT, int numberDay)
                  break;
             }
             currentNumberDay++;
-            day = ADT.data[i][0];
+            day = ADT[i].getDate();
             count = 1;
         }
     }
@@ -107,17 +107,36 @@ void countDays(ADT<T> &ADT, int numberDay)
 //Main utilizado para hacer pruebas y encontrar las respuestas de las preguntas
 int main() 
 {
-    //Inicializacion
-    ADT<string> test("equipo9.csv");
+    string file_name = "equipo9.csv"; // Nombre del csv.
+    ifstream file; // Crear  ifstream, biblioteca fstream.
+    file.open(file_name); // Abrir csv.
+
+    vector<string> fields(8);
+    vector<Record<string>> data;
+    
+    while(file.peek() != EOF) // Iterar hasta llegar al final del csv.
+    {
+        getline(file, fields[0], ',');
+        getline(file, fields[1], ','); // getline(nombre del archivo, variable en la que se guarda el valor, limitante para guardar cada campo)
+        getline(file, fields[2], ',');
+        getline(file, fields[3], ',');
+        getline(file, fields[4], ',');
+        getline(file, fields[5], ',');
+        getline(file, fields[6], ',');
+        getline(file, fields[7], '\n');
+
+        Record<string> row(fields);
+        data.push_back(row); // Guardar renglon en vector principal
+    }
 
 
 //PRUEBAS PRELIMINARES PARA DECIDIR CUALES METODOS DE BUSQUEDA Y SORTEO UTILIZAR
 
     //Establecer y llenar vector con la columna de hostnames
     vector<string> hostnames1;
-    for(size_t i = 0; i < test.data.size(); i++)
+    for(size_t i = 0; i < data.size(); i++)
     {
-        hostnames1.push_back(test.data[i][4]);
+        hostnames1.push_back(data[i].getUser());
     }
 
     //Hacer Objeto de QuickSort y organizar el vector de hostnames
@@ -130,9 +149,9 @@ int main()
 
     //Establecer y llenar vector con la columna de hostnames
     vector<string> hostnames2;
-    for(size_t i = 0; i < test.data.size(); i++)
+    for(size_t i = 0; i < data.size(); i++)
     {
-        hostnames2.push_back(test.data[i][4]);
+        hostnames2.push_back(data[i].getUser());
     }
 
     //Hacer Objeto de MergeSort y organizar el vector de hostnames
@@ -146,9 +165,9 @@ int main()
 //INSERTION SORT ESTA COMENTADO PORQUE TARDA 75 SEGUNDOS EN CARGAR
     // //Establecer y llenar vector con la columna de hostnames
     // vector<string> hostnames3;
-    // for(size_t i = 0; i < test.data.size(); i++)
+    // for(size_t i = 0; i < data.size(); i++)
     // {
-    //     hostnames3.push_back(test.data[i][4]);
+    //     hostnames3.push_back(data[i]getUser());
     // }
 
     // //Hacer Objeto de InsertionSort y organizar el vector de hostnames
@@ -178,14 +197,14 @@ int main()
 
 //PRUEBAS PARA RESPONDER LAS PREGUNTAS
 
-cout<<"La cantidad de registros es de: "<<test.data.size()<<endl;
+cout<<"La cantidad de registros es de: "<<data.size()<<endl;
 
 
     //Establecer y llenar vector con la columna de hostnames
     vector<string> hostnames;
-    for(size_t i = 0; i < test.data.size(); i++)
+    for(size_t i = 0; i < data.size(); i++)
     {
-        hostnames.push_back(test.data[i][4]);
+        hostnames.push_back(data[i].getUser());
     }
 
     //Hacer Objetos de Sort y Search y organizar el vector de hostnames
@@ -201,9 +220,9 @@ cout<<"La cantidad de registros es de: "<<test.data.size()<<endl;
 
     //Repetir lo anterior para la columna de destination names
     vector<string> destnames;
-    for(size_t i = 0; i < test.data.size(); i++)
+    for(size_t i = 0; i < data.size(); i++)
     {
-        destnames.push_back(test.data[i][7]);
+        destnames.push_back(data[i].getWebsite());
     }
 
     nameSort.sort(destnames, &compareNameLessOrEqual);
@@ -212,7 +231,7 @@ cout<<"La cantidad de registros es de: "<<test.data.size()<<endl;
     if(elementIdx2 >= 0){cout<<destnames[elementIdx2]<<endl;}
 
     // Llamar funcion para contar los registros de cierto dia.
-    countDays(test, 2);
+    countDays(data, 2);
 
     return 0;
 }
