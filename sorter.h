@@ -4,7 +4,6 @@
 #include <iostream>
 #include <vector>
 
-
 template <typename T>
 class Sorter
 {
@@ -22,12 +21,13 @@ class Sorter
     virtual void sort(std::vector<T> &arr) {};
 };
 
+
 template <typename T>
-class SelectionSort:public Sorter<T>
+class SelectionSort : public Sorter<T>
 {
     public:
-    SelectionSort(){};
-    ~SelectionSort(){};
+    SelectionSort() {};
+    ~SelectionSort() {};
 
     void sort(std::vector<T> &arr, bool (*compare)(T &a, T &b))
     {
@@ -36,7 +36,7 @@ class SelectionSort:public Sorter<T>
             size_t min = i;
             for (size_t j = i+1; j < arr.size(); j++)
             {
-                if ((*compare)(arr[j],arr[min]))
+                if ((*compare)(arr[j], arr[min]))
                     min = j;
             }
             Sorter<T>::swap(i, min, arr);
@@ -46,45 +46,45 @@ class SelectionSort:public Sorter<T>
 
 
 template <typename T>
-class BubbleSort:public Sorter<T>
+class BubbleSort : public Sorter<T>
 {
     public:
-    BubbleSort(){};
-    ~BubbleSort(){};
+    BubbleSort() {};
+    ~BubbleSort() {};
 
-    void sort(std::vector<T> &arr, bool (*compare)(T &a, T &b))
+    void sort(std::vector<T> &arr)
     {
-        bool noSwap = true;
-        for(size_t i = 0; i < arr.size(); i++)
+        for (size_t i = 0; i < arr.size(); i++)
         {
-            noSwap = true;
-            for(size_t j = i+1; j < arr.size(); j++)
-                if((*compare)(arr[j], arr[i]))
-                {
-                    Sorter<T>::swap(j,i,arr);
-                    noSwap = false;
+            bool no_swap = true;
+            for (size_t j = 0; j < arr.size() - i-1; j++)
+            {
+                if (arr[j] > arr[j+1]) {
+                    Sorter<T>::swap(j, j+1, arr);
+                    no_swap = false;
                 }
-            if(noSwap == true)
+            }
+            if (no_swap)
                 break;
-        }    
+        }        
     };
 };
 
 template <typename T>
-class InsertionSort:public Sorter<T>
+class InsertionSort : public Sorter<T>
 {
     public:
-    InsertionSort(){};
-    ~InsertionSort(){};
+    InsertionSort() {};
+    ~InsertionSort() {};
 
-    void sort(std::vector<T> &arr, bool (*compare)(T &a, T &b))
+    void sort(std::vector<T> &arr)
     {
         T key;
         for (size_t i = 1; i < arr.size(); i++)
         {
             key = arr[i];
             int j = i - 1;
-            while (j >= 0 && (*compare)(key, arr[j]))
+            while (j >= 0 && arr[j] > key)
             {
                 arr[j+1] = arr[j];
                 j--;
@@ -101,111 +101,129 @@ class MergeSort : public Sorter<T>
     MergeSort() {};
     ~MergeSort() {};
 
-    void sort(std::vector<T> &arr, bool (*compare)(T &a, T &b))
+    void sort(std::vector<T> &arr)
     {
-        mergesort(arr, 0, arr.size()-1, (*compare));
+        mergesort(arr, 0, arr.size()-1);
     };
 
-
-    void mergesort(std::vector<T> &arr, int l, int r, bool (*compare)(T &a, T &b))
+    // 1 3 5 2 7 4 6 2 0
+    // 0 1 2 3 4 5 6 7 8
+    void mergesort(std::vector<T> &arr, unsigned long l, unsigned long r)
     {
         if (l < r) {
-            int m = l + (r-l) / 2;
+            // Same as (l+r)/2, but avoids overflow for 
+            // large l and h 
+            unsigned long m = l + (r-l) / 2;
             
-            mergesort(arr, l, m, (*compare));
-            mergesort(arr, m+1, r, (*compare));
+            // Sort first and second halves 
+            mergesort(arr, l, m);
+            mergesort(arr, m+1, r);
 
-            merge(arr, l, m, r, (*compare));
+            merge(arr, l, m, r);
         }
     }
 
-    void merge(std::vector<T> &arr, int l, int m, int r, bool (*compare)(T &a, T &b))
-    {
-        std::vector<T> left;
-        std::vector<T> right;
-        int i,j,k;
-        int leftMax = m - l + 1;
-        int rightMax = r - m;
-
-        for(i = 0; i < leftMax; i++)
-            left.push_back(arr[l+i]);
-        for(j = 0; j < rightMax; j++)
-            right.push_back(arr[m+1+j]);
-        
-        i = 0;
-        j = 0;
-        k = l;
-
-        while(i < leftMax && j < rightMax)
-        {
-            if((*compare)(left[i], right[j]))
-            {
-                arr[k] = left[i];
-                i++;
-            }
-            else
-            {
-                arr[k] = right[j];
-                j++;
-            }
-            k++;
-        }
-
-        while(i < leftMax)
-        {
-            arr[k] = left[i];
-            k++;
-            i++;
-        }
-
-        while(j < rightMax)
-        {
-            arr[k] = right[j];
-            k++;
-            j++;
-        }
-    }
+    // 1 3 5 1 2 4 0 5 6 7 4 6 2 0
+    // - - - l - m - - r - - - - - 
+    // L = [1 2 4], R = [0 5 6]
+    void merge(std::vector<T> &arr, unsigned long l, unsigned long m, unsigned long r) 
+    { 
+        size_t i, j, k; 
+        size_t n1 = m - l + 1; 
+        size_t n2 = r - m; 
+      
+        /* create temp arrays */
+        T L[n1], R[n2]; 
+      
+        /* Copy data to temp arrays L[] and R[] */
+        for (i = 0; i < n1; i++) 
+            L[i] = arr[l + i]; 
+        for (j = 0; j < n2; j++) 
+            R[j] = arr[m + 1 + j]; 
+      
+        /* Merge the temp arrays back into arr[l..r]*/
+        i = 0; // Initial index of first subarray 
+        j = 0; // Initial index of second subarray 
+        k = l; // Initial index of merged subarray 
+        while (i < n1 && j < n2) { 
+            if (L[i] <= R[j]) { 
+                arr[k] = L[i]; 
+                i++; 
+            } 
+            else { 
+                arr[k] = R[j]; 
+                j++; 
+            } 
+            k++; 
+        } 
+      
+        /* Copy the remaining elements of L[], if there 
+           are any */
+        while (i < n1) { 
+            arr[k] = L[i]; 
+            i++; 
+            k++; 
+        } 
+      
+        /* Copy the remaining elements of R[], if there 
+           are any */
+        while (j < n2) { 
+            arr[k] = R[j]; 
+            j++; 
+            k++; 
+        } 
+    };
 };
 
 template <typename T>
-class QuickSort : public Sorter<T>
+class Quicksort : public Sorter<T>
 {
     public:
-    QuickSort(){};
-    ~QuickSort(){};
+    Quicksort() {};
+    ~Quicksort() {};
 
     void sort(std::vector<T> &arr, bool (*compare)(T &a, T &b))
     {
-        quicksort(arr, 0, arr.size()-1, (*compare));
+        quicksort(arr, 0, arr.size() - 1, compare);
     };
 
     void quicksort(std::vector<T> &arr, int low, int high, bool (*compare)(T &a, T &b))
     {
-        if(low < high)
-        {
-            int piv = partition(arr, low, high, (*compare));
-
-            quicksort(arr, low, piv - 1, (*compare));
-            quicksort(arr, piv + 1, high, (*compare));
-        }
+        if (low < high)  
+        {  
+            /* pi is partitioning index, arr[p] is now  
+            at right place */
+            int pi = partition(arr, low, high, compare);  
+      
+            // Separately sort elements before  
+            // partition and after partition  
+            quicksort(arr, low, pi - 1, compare);  
+            quicksort(arr, pi + 1, high, compare);  
+        }  
     };
 
-    int partition(std::vector<T> &arr, int low, int high, bool (*compare)(T &a, T &b))
-    {
-        T pivot = arr[high];
-        int i = low - 1;
-        for (size_t j = low; j <= high-1; j++)
-        {
-            if((*compare)(arr[j], pivot))
-            {
-                i++;
+    /* This function takes last element as pivot, places  
+    the pivot element at its correct position in sorted  
+    array, and places all smaller (smaller than pivot)  
+    to left of pivot and all greater elements to right  
+    of pivot */
+    int partition (std::vector<T> &arr, int low, int high, bool (*compare)(T &a, T &b))
+    {  
+        T pivot = arr[high]; // pivot  
+        int i = (low - 1);     // Index of smaller element  
+      
+        for (int j = low; j <= high - 1; j++)  
+        {  
+            // If current element is smaller than the pivot  
+            if ((*compare)(arr[j], pivot))  
+            {  
+                i++; // increment index of smaller element
                 Sorter<T>::swap(i, j, arr);
-            }
-        }
+            }  
+        }  
         Sorter<T>::swap(i+1, high, arr);
-        return(i+1);
-    };
+        return (i + 1);  
+    }; 
 };
-
 
 #endif
