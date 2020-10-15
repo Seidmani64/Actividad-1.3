@@ -2,6 +2,20 @@
 
 using namespace std;
 
+//////////////////////////////////////////////////////////////////////////////
+//Programa para guardar cada registro del csv como un ADT y poder           //
+//utilizarlo dentro de la clase analytics para buscar y modificar           //
+//cada registro individualmente a traves de comparacion de logs             //
+//                                                                          //
+//Autor Original: Leonardo Chang                                            //                                                                          //
+//                                                                          //
+//Autores de modificaciones:                                                //
+//Ian Seidman Sorsby A01028650                                              //
+//Gianluca Beltrán Bianchi A01029098                                        //
+//                                                                          //
+//Fecha de modificacion 12/10/2020                                          //
+//////////////////////////////////////////////////////////////////////////////
+
 Log::~Log()
 {}
 
@@ -59,12 +73,27 @@ bool Log::compare_src_hostname(Log &a, Log &b)
     return h1 == h2;
 }
 
+//Metodo para comparar los IPs fuente de dos logs a traves de los getters
+//de los mismos logs, usualmente utilizando un log dummy con un solo valor de ip
 bool Log::compare_src_ip(Log &a, Log &b)
 {
     stringstream ssa(a.get_src_ip());
     string h1, h2;
     getline(ssa, h1, ',');
     stringstream ssb(b.get_src_ip());
+    getline(ssb, h2, ',');
+    
+    return h1 == h2;
+}
+
+//Metodo para comparar los IPs destino de dos logs a traves de los getters
+//de los mismos logs, usualmente utilizando un log dummy con un solo valor de ip
+bool Log::compare_dst_ip(Log &a, Log &b)
+{
+    stringstream ssa(a.get_dst_ip());
+    string h1, h2;
+    getline(ssa, h1, ',');
+    stringstream ssb(b.get_dst_ip());
     getline(ssb, h2, ',');
     
     return h1 == h2;

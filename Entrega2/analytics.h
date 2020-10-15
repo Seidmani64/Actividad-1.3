@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include <stdio.h>
+#include <stack>
 #include "log.h"
 #include "../sorter.h"
 #include "../search.h"
@@ -23,12 +24,13 @@ public:
     int load_data_from_csv(std::string path);
     void print_data();
     int length();
+    Log get_registry(int idx);
 
-    void day_nth(int day_idx, std::string &date, int &count);
-    int find_computer_owner(std::vector<std::string> names);
     std::string get_computer_name(std::string ip);
+    std::stack<std::string> get_entry_connections(std::string ip);
+    std::queue<std::string> get_exit_connections(std::string ip);
 
-    std::vector<int> dst_port_under_val(int threshold);
+
 };
 
 

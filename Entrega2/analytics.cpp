@@ -3,12 +3,29 @@
 
 using namespace std;
 
+//////////////////////////////////////////////////////////////////////////////
+//Programa para leer del csv y guardarlo en una clase log                   //
+//con el proposito de poder sacar datos de cada registro y poder comparar   //
+//y buscar instancias o valores particulares dentro del csv                 //
+//Autor Original: Leonardo Chang                                            //                                                                          //
+//                                                                          //
+//Autores de modificaciones:                                                //
+//Ian Seidman Sorsby A01028650                                              //
+//Gianluca Beltrán Bianchi A01029098                                        //
+//                                                                          //
+//Fecha de modificacion 12/10/2020                                          //
+//////////////////////////////////////////////////////////////////////////////
+
 Analytics::~Analytics()
 {}
 
 Analytics::Analytics()
 {}
 
+//Metodo para leer datos del csv a traves de getline y guardarlos en un objeto
+//de tipo Log, luego dentro de un vector data
+//Tiene como parametro un string de la ubicacion del archivo csv
+//Regresa un int -1 si hubo un error y un 1 si logro cargar los datos
 int Analytics::load_data_from_csv(std::string path)
 {
     ifstream file(path);
@@ -34,6 +51,9 @@ int Analytics::load_data_from_csv(std::string path)
     return 1;
 }
 
+//Metodo para imprimir cada registro en una linea
+//No tiene parametros
+//No regresa un valor, solo imprime en la terminal
 void Analytics::print_data()
 {
     for (size_t i = 0; i < data.size(); i++)
@@ -42,72 +62,68 @@ void Analytics::print_data()
     }    
 }
 
+//Metodo para encontra la cantidad de registros en el csv
+//No tiene parametros
+//Regresa un int de la cantidad de registros
 int Analytics::length() 
 {
     return data.size();
 }
 
-void Analytics::day_nth(int day_idx, std::string &date, int &count)
+//Metodo para recibir objeto Log de una linea del registro
+//Tiene como parametro el indice del registro
+//Regresa un objeto Log del indice de registro
+Log Analytics::get_registry(int idx)
 {
-    date = "";
-    count = 0;
-
-    int curr = -1;
-    for (size_t i = 0; i < data.size(); i++)
-    {
-        if (data[i].get_date() != date)
-        {
-            curr++;
-            if (day_idx >= curr)
-                date = data[i].get_date();
-            else
-                break;                
-        }
-        if (day_idx == curr)
-            count++;
-    }    
+    return data[idx];
 }
 
-int Analytics::find_computer_owner(std::vector<std::string> names)
-{
-    Search<Log> my_search;
-    for (size_t i = 0; i < names.size(); i++)
-    {
-        Log dummy_log;
-        dummy_log.set_src_hostname(names[i]);
-        int search_res = my_search.search_sequential(data, dummy_log, &Log::compare_src_hostname);
-        if (search_res >= 0)
-            return search_res;    
-    }
-    return -1;
-}
-
+//Metodo para encontrar el usuario asociado con un ip fuente
+//Tiene como parametro un string de la ip fuente
+//Regresa un string del nombre completo(incluyendo.reto) o NULL si no se encontro
 std::string Analytics::get_computer_name(std::string ip)
 {
     Search<Log> my_search;
-    //for (size_t i = 0; i < data.size(); i++)
-    //{
         Log dummy_log;
         dummy_log.set_src_ip(ip);
         int search_res = my_search.search_sequential(data, dummy_log, &Log::compare_src_ip);
         if (search_res >= 0)
             return data[search_res].get_src_hostname();    
-    //}
     return "NULL";
 }
 
-std::vector<int> Analytics::dst_port_under_val(int threshold)
+
+//Metodo para llenar una pila con las conexiones entrantes
+//Tiene como parametro un string de la ip fuente
+//Regresa una pila de conexiones entrantes(strings de ip)
+std::stack<std::string> Analytics::get_entry_connections(std::string ip)
 {
-    vector<int> ports;
-    Search<int> searcher;
-    for (size_t i = 0; i < data.size(); i++)    
+    std::stack<std::string> connections;
+    string compareVal = "";
+    for(int i = 0; i < data.size(); i++)
     {
-        int dst_port = atoi(data[i].get_dst_port().c_str());
-        if (dst_port < threshold)
-        {
-            if (searcher.search_sequential(ports, dst_port, &Log::compare_equal_than) < 0)
-                ports.push_back(dst_port);
-        }
+        compareVal = data[i].get_dst_ip();
+        if(compareVal == ip)
+            connections.push(data[i].get_src_ip());
     }
-    return ports;    
+        
+    return connections;
 }
+
+//Metodo para llenar una cola con las conexiones salientes
+//Tiene como parametro un string de la ip fuente
+//Regresa una cola de conexiones salientes(strings de ip)
+std::queue<std::string> Analytics::get_exit_connections(std::string ip)
+{
+    std::queue<std::string> connections;
+    string compareVal = "";
+    for(int i = 0; i < data.size(); i++)
+    {
+        compareVal = data[i].get_src_ip();
+        if(compareVal == ip)
+            connections.push(data[i].get_dst_ip());
+    }
+        
+    return connections;
+}
+

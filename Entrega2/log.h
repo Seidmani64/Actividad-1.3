@@ -53,6 +53,8 @@ public:
 
     static bool compare_src_ip(Log &a, Log &b);
 
+    static bool compare_dst_ip(Log &a, Log &b);
+
     static bool compare_equal_than(int &a, int &b);
 
     void print();   
