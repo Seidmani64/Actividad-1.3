@@ -2,7 +2,6 @@
 #include <vector>
 #include <fstream>
 #include <regex>
-#include "analytics.h"
 #include "analytics.cpp"
 #include "log.cpp"
 
@@ -27,11 +26,12 @@ int main()
     cin>>userInput;
     cout<<""<<endl;
     string userIP = "172.23.5.";
-    userIP+=to_string(userInput);
+    userIP += to_string(userInput);
     string fullName = "";
     fullName = my_analitic.get_computer_name(userIP);
     string name = fullName.substr(0, fullName.find(".", 0));
-    cout<<"The user's name is: "<<name<<endl;
+    cout<<"The user's name is: "<< name <<endl;
+    cout << userIP << endl;
 
     return 0;
 }

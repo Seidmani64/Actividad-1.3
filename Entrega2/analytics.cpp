@@ -85,14 +85,14 @@ int Analytics::find_computer_owner(std::vector<std::string> names)
 std::string Analytics::get_computer_name(std::string ip)
 {
     Search<Log> my_search;
-    for (size_t i = 0; i < data.size(); i++)
-    {
+    //for (size_t i = 0; i < data.size(); i++)
+    //{
         Log dummy_log;
         dummy_log.set_src_ip(ip);
         int search_res = my_search.search_sequential(data, dummy_log, &Log::compare_src_ip);
         if (search_res >= 0)
-            return data[i].get_src_hostname();    
-    }
+            return data[search_res].get_src_hostname();    
+    //}
     return "NULL";
 }
 

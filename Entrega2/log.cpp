@@ -63,9 +63,9 @@ bool Log::compare_src_ip(Log &a, Log &b)
 {
     stringstream ssa(a.get_src_ip());
     string h1, h2;
-    getline(ssa, h1, '.');
+    getline(ssa, h1, ',');
     stringstream ssb(b.get_src_ip());
-    getline(ssb, h2, '.');
+    getline(ssb, h2, ',');
     
     return h1 == h2;
 }
