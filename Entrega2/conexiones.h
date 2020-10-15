@@ -38,6 +38,9 @@ public:
     };
     ~ConexionesComputadora() {};
 
+    //Metodo para recibir el IP de conexion entrante hasta arriba
+    //No tiene parametro
+    //Regresa el valor T hasta arriba de la pila
     T getConexionEntrante()
     {
         T value = conexionesEntrantes.top();
@@ -45,16 +48,25 @@ public:
         return value;
     }
 
+    //Metodo para poner un valor T hasta arriba de la pila
+    //Toma como parametro el valor en T
+    //No regresa nada
     void setConexionEntrante(T val)
     {
         conexionesEntrantes.push(val);
     }
 
-    void setConexionesEntrantes(stack<string> connections)
+    //Metodo para poner la pila como conexionesEntrantes directamente
+    //Toma como parametro una pila de T de las conexiones
+    //No regresa nada
+    void setConexionesEntrantes(stack<T> connections)
     {
         conexionesEntrantes = connections;
     }
 
+    //Metodo para recibir el IP de conexion saliente hasta en frente
+    //No tiene parametro
+    //Regresa el valor T hasta en frente de la cola
     T getConexionSaliente()
     {
         T value = conexionesSalientes.front();
@@ -62,12 +74,18 @@ public:
         return value;
     }
 
+    //Metodo para poner un valor T hasta en frente de la cola
+    //Toma como parametro el valor en T
+    //No regresa nada
     void setConexionSaliente(T val)
     {
         conexionesSalientes.push(val);
     }
 
-    void setConexionesSalientes(queue<string> connections)
+    //Metodo para poner la cola como conexionesSalientes directamente
+    //Toma como parametro una cola de T de las conexiones
+    //No regresa nada
+    void setConexionesSalientes(queue<T> connections)
     {
         conexionesSalientes = connections;
     }
