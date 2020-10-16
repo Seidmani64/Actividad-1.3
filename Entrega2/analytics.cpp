@@ -116,12 +116,12 @@ std::stack<std::string> Analytics::get_entry_connections(std::string ip, int &la
 //Metodo para llenar una cola con las conexiones salientes
 //Tiene como parametro un string de la ip fuente
 //Regresa una cola de conexiones salientes(strings de ip)
-std::queue<std::string> Analytics::get_exit_connections(std::string ip, int &lastExit, bool &threeConsecutive, std::string &threeConsecutiveIp)
+std::queue<std::string> Analytics::get_exit_connections(std::string ip, bool &threeConsecutive, std::string &threeConsecutiveIp)
 {
     std::queue<std::string> connections;
     string compareVal = "";
-    string temp = data[0].get_dst_ip();;
-    int count = 0;
+    string temp = data[0].get_dst_ip();
+    int count = 1;
     threeConsecutive = false;
     for(int i = 0; i < data.size(); i++)
     {
@@ -129,17 +129,19 @@ std::queue<std::string> Analytics::get_exit_connections(std::string ip, int &las
         if(compareVal == ip)
         {
             connections.push(data[i].get_dst_ip());
-            lastExit = i;
-            temp = data[i].get_dst_ip();
 
             if(data[i].get_dst_ip() == temp)
             {
                 count ++;
                 if(count == 3)
                 {
-                threeConsecutive = true;
-                threeConsecutiveIp = data[i].get_dst_ip();
+                    threeConsecutive = true;
+                    threeConsecutiveIp = data[i].get_dst_ip();
                 }
+            }
+            else
+            {
+                count = 1;
             }
         }
         

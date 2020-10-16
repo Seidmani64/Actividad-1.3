@@ -39,7 +39,7 @@ int main()
 
     //Inicializacion de ConexionesComputadora
     int userInput;
-    int lastEntry, lastExit;
+    int lastEntry;
     bool threeConsecutive;
     string threeConsecutiveIp;
     cout << "Choose a number between 1 and 150: ";
@@ -58,7 +58,7 @@ int main()
     userPC.setConexionesEntrantes(entryConnections);
 
     //Llenar ConexionesSalientes
-    queue<string> exitConnections = my_analitic.get_exit_connections(userIP, lastExit, threeConsecutive, threeConsecutiveIp);
+    queue<string> exitConnections = my_analitic.get_exit_connections(userIP, threeConsecutive, threeConsecutiveIp);
     userPC.setConexionesSalientes(exitConnections);
 
     
@@ -66,7 +66,6 @@ int main()
     ////////////////// Pregunta 2 //////////////////
     cout << endl << "\tQuestion 2" << endl;
     cout << userPC.getConexionEntrante() << " -> Internal." << endl;
-    //cout << userPC.getUltimaConexionSaliente() << " -> External." << endl;
     
     ////////////////// Pregunta 3 //////////////////
     cout << endl << "\tQuestion 3" << endl;
@@ -96,6 +95,7 @@ int main()
         cout << "This computer had three consecutive connections to this ip: " << threeConsecutiveIp << endl;
     else
         cout << "This computer didn't have three consecutive connections to the same website." << endl;
+
 
     return 0;
 }
