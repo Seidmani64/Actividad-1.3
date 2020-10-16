@@ -7,7 +7,7 @@ using namespace std;
 //Programa para leer del csv y guardarlo en una clase log                   //
 //con el proposito de poder sacar datos de cada registro y poder comparar   //
 //y buscar instancias o valores particulares dentro del csv                 //
-//Autor Original: Leonardo Chang                                            //                                                                          //
+//Autor Original: Leonardo Chang                                            //                                                                          
 //                                                                          //
 //Autores de modificaciones:                                                //
 //Ian Seidman Sorsby A01028650                                              //
@@ -96,7 +96,7 @@ std::string Analytics::get_computer_name(std::string ip)
 //Metodo para llenar una pila con las conexiones entrantes
 //Tiene como parametro un string de la ip fuente
 //Regresa una pila de conexiones entrantes(strings de ip)
-std::stack<std::string> Analytics::get_entry_connections(std::string ip)
+std::stack<std::string> Analytics::get_entry_connections(std::string ip, int &lastEntry)
 {
     std::stack<std::string> connections;
     string compareVal = "";
@@ -104,7 +104,10 @@ std::stack<std::string> Analytics::get_entry_connections(std::string ip)
     {
         compareVal = data[i].get_dst_ip();
         if(compareVal == ip)
+        {
             connections.push(data[i].get_src_ip());
+            lastEntry = i;
+        }
     }
         
     return connections;
@@ -113,15 +116,34 @@ std::stack<std::string> Analytics::get_entry_connections(std::string ip)
 //Metodo para llenar una cola con las conexiones salientes
 //Tiene como parametro un string de la ip fuente
 //Regresa una cola de conexiones salientes(strings de ip)
-std::queue<std::string> Analytics::get_exit_connections(std::string ip)
+std::queue<std::string> Analytics::get_exit_connections(std::string ip, int &lastExit, bool &threeConsecutive, std::string &threeConsecutiveIp)
 {
     std::queue<std::string> connections;
     string compareVal = "";
+    string temp = data[0].get_dst_ip();;
+    int count = 0;
+    threeConsecutive = false;
     for(int i = 0; i < data.size(); i++)
     {
         compareVal = data[i].get_src_ip();
         if(compareVal == ip)
+        {
             connections.push(data[i].get_dst_ip());
+            lastExit = i;
+            temp = data[i].get_dst_ip();
+
+            if(data[i].get_dst_ip() == temp)
+            {
+                count ++;
+                if(count == 3)
+                {
+                threeConsecutive = true;
+                threeConsecutiveIp = data[i].get_dst_ip();
+                }
+            }
+        }
+        
+        temp = data[i].get_dst_ip();
     }
         
     return connections;

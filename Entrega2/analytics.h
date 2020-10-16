@@ -27,8 +27,8 @@ public:
     Log get_registry(int idx);
 
     std::string get_computer_name(std::string ip);
-    std::stack<std::string> get_entry_connections(std::string ip);
-    std::queue<std::string> get_exit_connections(std::string ip);
+    std::stack<std::string> get_entry_connections(std::string ip, int &lastEntry);
+    std::queue<std::string> get_exit_connections(std::string ip, int &lastExit, bool &threeConsecutive, std::string &threeConsecutiveIp);
 
 
 };
