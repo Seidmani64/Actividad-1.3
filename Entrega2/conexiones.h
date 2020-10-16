@@ -44,7 +44,7 @@ public:
     T getConexionEntrante()
     {
         T value = conexionesEntrantes.top();
-        conexionesEntrantes.pop();
+        //conexionesEntrantes.pop();
         return value;
     }
 
@@ -70,7 +70,14 @@ public:
     T getConexionSaliente()
     {
         T value = conexionesSalientes.front();
-        conexionesSalientes.pop();
+        //conexionesSalientes.pop();
+        return value;
+    }
+
+    T getUltimaConexionSaliente()
+    {
+        T value = conexionesSalientes.back();
+        //conexionesSalientes.pop();
         return value;
     }
 

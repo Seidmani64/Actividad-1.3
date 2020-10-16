@@ -34,41 +34,68 @@ int main()
         return 0;
     }
 
+    ////////////////// Pregunta 1 //////////////////
+    cout << endl << "\tQuestion 1" << endl;
+
     //Inicializacion de ConexionesComputadora
     int userInput;
-    cout<<"Elige un numero entre 1 y 150: ";
-    cin>>userInput;
-    cout<<""<<endl;
+    int lastEntry, lastExit;
+    bool threeConsecutive;
+    string threeConsecutiveIp;
+    cout << "Choose a number between 1 and 150: ";
+    cin >> userInput;
     string userIP = "172.23.5.";
     userIP += to_string(userInput);
+    cout << "IP being used: " << userIP << endl;
     string fullName = "";
     fullName = my_analitic.get_computer_name(userIP);
     string name = fullName.substr(0, fullName.find(".", 0));
-    ConexionesComputadora<string> userPC(userIP,name);
+
+    ConexionesComputadora<string> userPC(userIP, name);
 
     //Llenar ConexionesEntrantes
-    stack<string> entryConnections = my_analitic.get_entry_connections(userIP);
+    stack<string> entryConnections = my_analitic.get_entry_connections(userIP, lastEntry);
     userPC.setConexionesEntrantes(entryConnections);
 
+    //Llenar ConexionesSalientes
+    queue<string> exitConnections = my_analitic.get_exit_connections(userIP, lastExit, threeConsecutive, threeConsecutiveIp);
+    userPC.setConexionesSalientes(exitConnections);
+
+    
+
+    ////////////////// Pregunta 2 //////////////////
+    cout << endl << "\tQuestion 2" << endl;
+    cout << userPC.getConexionEntrante() << " -> Internal." << endl;
+    //cout << userPC.getUltimaConexionSaliente() << " -> External." << endl;
+    
+    ////////////////// Pregunta 3 //////////////////
+    cout << endl << "\tQuestion 3" << endl;
+    int numEntry = 0;
     while(!entryConnections.empty())
     {
-        cout<<"Testing entryConnections val: "<<entryConnections.top()<<endl;
+        numEntry ++;
         entryConnections.pop();
     }
 
-    cout<<"Testing getConexionEntrante()  result is: "<<userPC.getConexionEntrante()<<endl;
+    cout << "Number of entry connections: " << numEntry << endl;
 
-    //Llenar ConexionesSalientes
-    queue<string> exitConnections = my_analitic.get_exit_connections(userIP);
-    userPC.setConexionesSalientes(exitConnections);
-
+    ////////////////// Pregunta 4 //////////////////
+    cout << endl << "\tQuestion 4" << endl;
+    int numExit = 0;
     while(!exitConnections.empty())
     {
-        cout<<"Testing exitConnections val: "<<exitConnections.front()<<endl;
+        numExit ++;
         exitConnections.pop();
     }
 
-    cout<<"Testing getConexionSaliente() result is: "<<userPC.getConexionSaliente()<<endl;
+    cout << "Number of exit connections: " << numExit << endl;
+
+    //////////////////   Extra    //////////////////
+    cout << endl << "\tExtra" << endl;
+    if(threeConsecutive)
+        cout << "This computer had three consecutive connections to this ip: " << threeConsecutiveIp << endl;
+    else
+        cout << "This computer didn't have three consecutive connections to the same website." << endl;
 
     return 0;
 }
