@@ -8,6 +8,7 @@
 #include <string>
 #include <stdio.h>
 #include <stack>
+#include <queue>
 #include "log.h"
 #include "../sorter.h"
 #include "../search.h"
@@ -28,7 +29,7 @@ public:
 
     std::string get_computer_name(std::string ip);
     std::stack<std::string> get_entry_connections(std::string ip, int &lastEntry);
-    std::queue<std::string> get_exit_connections(std::string ip, int &lastExit, bool &threeConsecutive, std::string &threeConsecutiveIp);
+    std::queue<std::string> get_exit_connections(std::string ip, bool &threeConsecutive, std::string &threeConsecutiveIp);
 
 
 };
