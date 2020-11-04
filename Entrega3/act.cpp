@@ -23,7 +23,7 @@ int main()
     vector<string> names;
     names = my_analitic.get_non_domain_names();
     for(int i = 0; i < names.size(); i++)
-        cout<<"Computer name: "<<names[i]<<endl;
+        cout<<"Domain name: "<<names[i]<<endl;
 
     cout<<"Test complete."<<endl;
 

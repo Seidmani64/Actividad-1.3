@@ -97,14 +97,20 @@ std::vector<std::string> Analytics::get_non_domain_names()
     std::vector<std::string> names;
     std::string domain = "reto.com";
     std::string computer_name;
-    std::string temp;
+    std::string domain_name;
+    std::string temp_cn;
+    std::string temp_dn;
 
     for(int i = 0; i < data.size(); i++)
     {
         computer_name = data[i].get_src_hostname();
-        temp = computer_name.substr(computer_name.find('.') + 1);
-        if(domain.compare(temp) != 0)
+        domain_name = data[i].get_dst_hostname();
+        temp_cn = computer_name.substr(computer_name.find('.') + 1);
+        temp_dn = domain_name.substr(domain_name.find('.') + 1);
+        if(domain.compare(temp_cn) != 0)
             names.push_back(computer_name);
+        if(domain.compare(temp_dn) != 0)
+            names.push_back(domain_name);
 
     }
 
