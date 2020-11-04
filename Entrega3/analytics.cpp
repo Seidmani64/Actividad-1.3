@@ -108,9 +108,11 @@ std::vector<std::string> Analytics::get_non_domain_names()
         temp_cn = computer_name.substr(computer_name.find('.') + 1);
         temp_dn = domain_name.substr(domain_name.find('.') + 1);
         if(domain.compare(temp_cn) != 0)
-            names.push_back(computer_name);
+            if(computer_name != "-")
+                names.push_back(computer_name);
         if(domain.compare(temp_dn) != 0)
-            names.push_back(domain_name);
+            if(domain_name != "-")
+                names.push_back(domain_name);
 
     }
 
