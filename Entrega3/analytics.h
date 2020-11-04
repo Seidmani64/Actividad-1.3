@@ -8,7 +8,6 @@
 #include <string>
 #include <stdio.h>
 #include <stack>
-#include <queue>
 #include "log.h"
 #include "../sorter.h"
 #include "../search.h"
@@ -27,9 +26,9 @@ public:
     int length();
     Log get_registry(int idx);
 
-    std::string get_computer_name(std::string ip);
     std::vector<std::string> get_non_domain_names();
-
+    std::string get_domain_ip(std::string domain);
+    std::vector<std::string> get_entry_connections(std::string ip);
 
 };
 

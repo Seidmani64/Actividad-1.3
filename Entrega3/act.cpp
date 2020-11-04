@@ -1,4 +1,5 @@
 #include <vector>
+#include <algorithm>
 #include "analytics.h"
 #include "log.h"
 #include "analytics.cpp"
@@ -22,10 +23,18 @@ int main()
 
     vector<string> names;
     names = my_analitic.get_non_domain_names();
-    for(int i = 0; i < names.size(); i++)
-        cout<<"Domain name: "<<names[i]<<endl;
 
-    cout<<"Test complete."<<endl;
+    string anomaly = "249krwpsl2ciatl5u8nb.ru";
+    string anomalyIP = my_analitic.get_domain_ip(anomaly);
+    cout<<"The anomaly's IP address is: "<<anomalyIP<<endl;
+
+    vector<string> eC;
+    eC = my_analitic.get_entry_connections(anomalyIP);
+    std::sort(eC.begin(), eC.end());
+    eC.erase(std::unique(eC.begin(), eC.end()), eC.end());
+    int computerNum = eC.size();
+    cout<<"The amount of computers that connected to the anomaly is: "<<computerNum<<endl;
+
 
     return 0;
 }

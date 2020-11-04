@@ -78,18 +78,19 @@ Log Analytics::get_registry(int idx)
     return data[idx];
 }
 
-//Metodo para encontrar el usuario asociado con un ip fuente
-//Tiene como parametro un string de la ip fuente
-//Regresa un string del nombre completo(incluyendo.reto) o NULL si no se encontro
-std::string Analytics::get_computer_name(std::string ip)
+//Metodo para recibir string del IP de un dominio
+//Tiene como parametro el nombre del dominio
+//Regresa un string del IP del dominio
+std::string Analytics::get_domain_ip(std::string domain)
 {
-    Search<Log> my_search;
-        Log dummy_log;
-        dummy_log.set_src_ip(ip);
-        int search_res = my_search.search_sequential(data, dummy_log, &Log::compare_src_ip);
-        if (search_res >= 0)
-            return data[search_res].get_src_hostname();    
-    return "NULL";
+    std::string compareVal = "";
+    for(int i = 0; i < data.size(); i++)
+    {
+        compareVal = data[i].get_dst_hostname();
+        if(compareVal == domain)
+            return data[i].get_dst_ip();
+    }
+    return "Not Found";
 }
 
 std::vector<std::string> Analytics::get_non_domain_names()
@@ -119,5 +120,20 @@ std::vector<std::string> Analytics::get_non_domain_names()
     return names;
 }
 
-
+//Metodo para llenar una pila con las conexiones entrantes
+//Tiene como parametro un string de la ip fuente
+//Regresa una pila de conexiones entrantes(strings de ip)
+std::vector<std::string> Analytics::get_entry_connections(std::string ip)
+{
+    std::vector<std::string> connections;
+    string compareVal = "";
+    for(int i = 0; i < data.size(); i++)
+    {
+        compareVal = data[i].get_dst_ip();
+        if(compareVal == ip)
+            connections.push_back(data[i].get_src_ip());
+    }
+        
+    return connections;
+}
 
