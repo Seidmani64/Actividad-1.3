@@ -13,7 +13,7 @@ using namespace std;
 //Ian Seidman Sorsby A01028650                                              //
 //Gianluca Beltrán Bianchi A01029098                                        //
 //                                                                          //
-//Fecha de modificacion 12/10/2020                                          //
+//Fecha de modificacion 07/11/2020                                          //
 //////////////////////////////////////////////////////////////////////////////
 
 Analytics::~Analytics()
@@ -93,6 +93,9 @@ std::string Analytics::get_domain_ip(std::string domain)
     return "Not Found";
 }
 
+//Metodo para recibir un vector de strings de los nombres de dominio que no corresponden a reto.com
+//No tiene parametro
+//Regresa un vector de string de los nombres de dominio que no corresponden a reto.com
 std::vector<std::string> Analytics::get_non_domain_names()
 {
     std::vector<std::string> names;
