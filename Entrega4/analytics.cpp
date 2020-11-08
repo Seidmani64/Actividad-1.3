@@ -93,6 +93,9 @@ std::string Analytics::get_domain_ip(std::string domain)
     return "Not Found";
 }
 
+//Metodo para recibir un vector de strings de los nombres de dominio que no corresponden a reto.com
+//No tiene parametro
+//Regresa un vector de string de los nombres de dominio que no corresponden a reto.com
 std::vector<std::string> Analytics::get_non_domain_names()
 {
     std::vector<std::string> names;
@@ -137,6 +140,10 @@ std::vector<std::string> Analytics::get_entry_connections(std::string ip)
     return connections;
 }
 
+
+//Metodo para recibir dominios y su cantidad de conexiones por dia
+//Toma como parametro un string de la fecha
+//Regresa un mapa de formato "dominio":"cantidad de conexiones por dia"
 std::map<std::string,int> Analytics::conexionesPorDia(std::string date)
 {
     std::vector<std::string> domain_list; 
@@ -147,20 +154,24 @@ std::map<std::string,int> Analytics::conexionesPorDia(std::string date)
     int counter;
     for(int i = 0; i < data.size(); i++)
     {
-        counter = 0;
-        compare_domain = data[i].get_dst_hostname();
-        short_domain = compare_domain.substr(compare_domain.find('.') + 1);
-        if(short_domain.compare(home_domain) != 0)
-            if(short_domain != "-")
-                if(conexiones.count(compare_domain) == 0)
-                {
-                    for(int j = 0; j < data.size(); j++)
-                        if(compare_domain == data[j].get_dst_hostname())
-                            counter++;
-                    conexiones.insert(std::pair<string,int>(compare_domain,counter));
-                }
-                
-                
+        if(date.compare(data[i].get_date()) == 0)
+        {
+            counter = 0;
+            compare_domain = data[i].get_dst_hostname();
+            short_domain = compare_domain.substr(compare_domain.find('.') + 1);
+            if(short_domain.compare(home_domain) != 0)
+                if(short_domain != "-")
+                    if(conexiones.count(compare_domain) == 0)
+                    {
+                        for(int j = 0; j < data.size(); j++)
+                            if(date.compare(data[j].get_date()) == 0)
+                            {
+                                if(compare_domain == data[j].get_dst_hostname())
+                                counter++;
+                            }
+                        conexiones.insert(std::pair<string,int>(compare_domain,counter));
+                    }
+        }       
     }
     return conexiones;
 }

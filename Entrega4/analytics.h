@@ -31,6 +31,7 @@ public:
     std::string get_domain_ip(std::string domain);
     std::vector<std::string> get_entry_connections(std::string ip);
     std::map<std::string,int> conexionesPorDia(std::string date);
+
 };
 
 
