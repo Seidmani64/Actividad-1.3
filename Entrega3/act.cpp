@@ -11,6 +11,18 @@
 
 using namespace std;
 
+//////////////////////////////////////////////////////////////////////////////
+//Programa para leer del csv y responder preguntas basadas en aquel         //
+//Esto se hace a traves de la clase analytics y funciones dentro de la misma//
+//                                                                          //
+//Autores:                                                                  //
+//Ian Seidman Sorsby A01028650                                              //
+//Gianluca Beltrán Bianchi A01029098                                        //                                                                          
+//                                                                          //
+//Fecha de modificacion 7/11/2020                                           //
+//////////////////////////////////////////////////////////////////////////////
+
+
 int main()
 {
     //Load Files
