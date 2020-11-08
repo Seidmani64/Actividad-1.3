@@ -16,10 +16,12 @@ using namespace std;
 //las instancias del .csv donde el ip del usuario es la fuente y otras      //
 // donde la misma es el destino, en estructuras lineales correspondientes   //
 //                                                                          //
+//Se utilizo para responder las preguntas 4-6 de la actividad 3             //
+//                                                                          //
 //Ian Seidman Sorsby A01028650                                              //
 //Gianluca Beltrán Bianchi A01029098                                        //
 //                                                                          //
-//Fecha de creacion 12/10/2020                                              //
+//Fecha de modificacion 07/11/2020                                          //
 //////////////////////////////////////////////////////////////////////////////
 
 template <typename T>
@@ -76,6 +78,9 @@ public:
         return value;
     }
 
+    //Metodo para recibir la conexion saliente mas atras
+    //No tiene parametro
+    //Regresa el valor T hasta en atras de la pila
     T getUltimaConexionSaliente()
     {
         T value = conexionesSalientes.back();
@@ -83,6 +88,9 @@ public:
         return value;
     }
 
+    //Metodo para imprimir las conexiones salientes
+    //No tiene parametro
+    //No regresa nada, solo imprime a la terminal todas las conexiones salientes
     void printConexionSaliente()
     {
         while (!conexionesSalientes.empty())
@@ -92,6 +100,9 @@ public:
         }
     }
 
+    //Metodo para imprimir las conexiones entrantes
+    //No tiene parametro
+    //No regresa nada, solo imprime a la terminal todas las conexiones entrantes
     void printConexionEntrante()
     {
         cout << conexionesEntrantes.size() << endl;
@@ -102,11 +113,17 @@ public:
         }
     }
 
+    //Metodo para regresar la cantidad de elementos en conexiones entrantes
+    //No tiene parametro
+    //Regresa un valor int de la cantidad de elementos en conexiones entrantes
     int conexionEntranteSize()
     {
         return conexionesEntrantes.size();
     }
 
+    //Metodo para regresar la cantidad de elementos en conexiones salientes
+    //No tiene parametro
+    //Regresa un valor int de la cantidad de elementos en conexiones salientes
     int conexionSalienteSize()
     {
         return conexionesSalientes.size();
