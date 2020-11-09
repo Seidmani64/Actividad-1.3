@@ -77,7 +77,7 @@ int main()
 
     /////////////////////////////////// Pregunta 2 ///////////////////////////////
    
-    cout << "El sitio anomalo 249krwpsl2ciatl5u8nb.ru aparece en el top 5 desde el día 6." << endl;
+    cout << "El sitio anomalo 249krwpsl2ciatl5u8nb.ru aparece en el top 5 desde el dia 6." << endl;
 
 
 /////////////////////// Pregunta 3 //////////////////////////////////////
@@ -99,7 +99,7 @@ int main()
     cout << pairs[i].first << ":" << pairs[i].second << endl;
     }
 
-    cout << "El sitio protonmail.com tiene una cantidad mucho más alta de tráfico que lo normal" << endl;
+    cout << "\nEl sitio protonmail.com tiene una cantidad mucho mas alta de trafico que lo normal" << endl;
     
 
     return 0;
