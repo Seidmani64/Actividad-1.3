@@ -48,7 +48,6 @@ int main()
         return 0;
     }
     
-
     vector<vector<string>> topFives;
     vector<pair<string, int>> currentTop;
     vector<string> temp;
@@ -79,8 +78,27 @@ int main()
     /////////////////////////////////// Pregunta 2 ///////////////////////////////
    
     cout << "El sitio anomalo 249krwpsl2ciatl5u8nb.ru aparece en el top 5 desde el día 6." << endl;
+=======
 
-    /////////////////////////////////// Pregunta 3 ///////////////////////////////
+/////////////////////// Pregunta 3 //////////////////////////////////////
+    map<string,int> conexiones;
+    conexiones = my_analitic.conexionesTotal();
+    
+    vector<pair<string,int>> pairs;
+    for(auto i = conexiones.begin(); i != conexiones.end(); i++)
+        pairs.push_back(*i);
+
+    sort(pairs.begin(),pairs.end(), [=](pair<string,int>& a, pair<string,int>& b)
+    {
+        return a.second < b.second;
+    }
+    );
+
+    for (int i = pairs.size()-1; i >= 0; i--)
+    {
+    cout << pairs[i].first << ":" << pairs[i].second << endl;
+    }
+
     cout << "El sitio protonmail.com tiene una cantidad mucho más alta de tráfico que lo normal" << endl;
     
 
