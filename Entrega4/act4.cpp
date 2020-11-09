@@ -23,18 +23,25 @@ int main()
         return 0;
     }
 
-
+/////////////////////// Pregunta 3 //////////////////////////////////////
     map<string,int> conexiones;
-    conexiones = my_analitic.conexionesPorDia("10-8-2020");
+    conexiones = my_analitic.conexionesTotal();
     
-    for (auto& x: conexiones) {
-    cout << x.first << ": " << x.second << '\n';
-  }
+    vector<pair<string,int>> pairs;
+    for(auto i = conexiones.begin(); i != conexiones.end(); i++)
+        pairs.push_back(*i);
 
+    sort(pairs.begin(),pairs.end(), [=](pair<string,int>& a, pair<string,int>& b)
+    {
+        return a.second < b.second;
+    }
+    );
 
+    for (int i = pairs.size()-1; i >= 0; i--)
+    {
+    cout << pairs[i].first << ":" << pairs[i].second << endl;
+    }
 
-
-    cout<<"Test"<<endl;
 
 
     return 0;

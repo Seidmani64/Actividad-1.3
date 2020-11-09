@@ -146,7 +146,6 @@ std::vector<std::string> Analytics::get_entry_connections(std::string ip)
 //Regresa un mapa de formato "dominio":"cantidad de conexiones por dia"
 std::map<std::string,int> Analytics::conexionesPorDia(std::string date)
 {
-    std::vector<std::string> domain_list; 
     std::string home_domain = "reto.com";
     std::string compare_domain;
     std::string short_domain;
@@ -175,3 +174,34 @@ std::map<std::string,int> Analytics::conexionesPorDia(std::string date)
     }
     return conexiones;
 }
+
+//Metodo para recibir dominios y su cantidad de conexiones
+//No tiene parametro
+//Regresa un mapa de formato "dominio":"cantidad de conexiones"
+std::map<std::string,int> Analytics::conexionesTotal()
+{
+    std::string home_domain = "reto.com";
+    std::string compare_domain;
+    std::string short_domain;
+    std::map<std::string,int> conexiones;
+    int counter;
+    for(int i = 0; i < data.size(); i++)
+    {
+        counter = 0;
+        compare_domain = data[i].get_dst_hostname();
+        short_domain = compare_domain.substr(compare_domain.find('.') + 1);
+        if(short_domain.compare(home_domain) != 0)
+            if(short_domain != "-")
+                if(conexiones.count(compare_domain) == 0)
+                {
+                    for(int j = 0; j < data.size(); j++)
+                    {
+                        if(compare_domain == data[j].get_dst_hostname())
+                        counter++;
+                    }
+                    conexiones.insert(std::pair<std::string,int>(compare_domain,counter));
+                }
+    }    
+    return conexiones;   
+}
+    
