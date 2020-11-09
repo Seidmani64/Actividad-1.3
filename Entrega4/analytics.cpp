@@ -175,6 +175,33 @@ std::map<std::string,int> Analytics::conexionesPorDia(std::string date)
     return conexiones;
 }
 
+// Metodo para imprimir los n sitios con mas accesos
+// Implementar un BST con la cantidad de conexiones entrantes como parámetro  
+std::vector<pair<string, int>> Analytics::top(int n, string date)
+{
+    BinarySearchTree<pair<std::string, int>> bst;
+    std::map<std::string, int> conexiones_map = conexionesPorDia(date);
+    vector<pair<string, int>> inorder;
+    vector<pair<string, int>> topN;
+
+    for (auto& i : conexiones_map)
+        bst.insert_node_recursive(i);
+    
+    bst.print_inorder_inv(n, inorder);
+
+    int count = 0;
+    for (auto& i : inorder)
+    {
+        if (count == n)
+            break;
+        
+        topN.push_back(i);
+        count++;
+    }
+
+    return topN;
+}
+
 //Metodo para recibir dominios y su cantidad de conexiones
 //No tiene parametro
 //Regresa un mapa de formato "dominio":"cantidad de conexiones"
@@ -204,4 +231,4 @@ std::map<std::string,int> Analytics::conexionesTotal()
     }    
     return conexiones;   
 }
-    
+

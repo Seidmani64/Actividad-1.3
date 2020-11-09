@@ -10,6 +10,7 @@
 #include <stack>
 #include <map>
 #include "log.h"
+#include "bst.h"
 #include "../sorter.h"
 #include "../search.h"
 
@@ -31,6 +32,7 @@ public:
     std::string get_domain_ip(std::string domain);
     std::vector<std::string> get_entry_connections(std::string ip);
     std::map<std::string,int> conexionesPorDia(std::string date);
+    std::vector<pair<string, int>> top(int n, string fecha);
     std::map<std::string,int> conexionesTotal();
 
 };
