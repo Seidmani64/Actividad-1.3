@@ -78,7 +78,7 @@ int main()
     /////////////////////////////////// Pregunta 2 ///////////////////////////////
    
     cout << "El sitio anomalo 249krwpsl2ciatl5u8nb.ru aparece en el top 5 desde el día 6." << endl;
-=======
+
 
 /////////////////////// Pregunta 3 //////////////////////////////////////
     map<string,int> conexiones;
