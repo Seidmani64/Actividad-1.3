@@ -55,7 +55,6 @@ public:
         if(cond)
         {
             nodes.push_back(node);
-            std::cout<<"The value of the node is: "<<val<<std::endl;
             return nodes.size()-1;
         }
         else
@@ -68,10 +67,26 @@ public:
 
     void add_edge(int src, int dst)
     {
-        nodes[src].add_to_adj(dst);
-        if (!is_directed)
-            nodes[dst].add_to_adj(src);
+        bool cond = false;
+        for(int i = 0; i < nodes[src].get_adj().size(); i++)
+        {
+            if(nodes[src].get_adj()[i] == dst)
+                cond = true;
+        }
+        if(!cond)
+        {
+            nodes[src].add_to_adj(dst);
+            if (!is_directed)
+                nodes[dst].add_to_adj(src);
+        }
+
+
     };
+
+    std::vector<GraphVertex<T>> get_nodes()
+    {
+        return nodes;
+    }
 
     void BFS(int start_vertex)
     {

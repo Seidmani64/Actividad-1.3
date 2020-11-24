@@ -234,11 +234,12 @@ std::map<std::string,int> Analytics::conexionesTotal()
 
 Graph<string> Analytics::get_connections_graph()
 {
-    Graph<string> graph;
-    vector<string> included;
+    Graph<string> graph(true);
     string ipInterna = "172.23.5.";
     string ipSrcCompare = "";
     string ipDstCompare = "";
+    int srcIdx = -1;
+    int dstIdx = -1;
     for(int i = 0; i < data.size(); i++)
     {
         ipSrcCompare = data[i].get_src_ip();
@@ -250,23 +251,101 @@ Graph<string> Analytics::get_connections_graph()
 
         if(((ipSrcCompare.compare(ipInterna)==0)&&(ipDstCompare.compare(ipInterna)==0)))
         {
-            if(find(included.begin(), included.end(), data[i].get_src_ip())==included.end())
-            {
-                graph.add_node(data[i].get_src_ip());
-                included.push_back(data[i].get_src_ip());
-            }
-    
-            if(find(included.begin(), included.end(), data[i].get_dst_ip())==included.end())
-            {
-                graph.add_node(data[i].get_dst_ip());
-                included.push_back(data[i].get_dst_ip());
-            }
-
-            
+            srcIdx = graph.add_node(data[i].get_src_ip());
+            dstIdx = graph.add_node(data[i].get_dst_ip());
+            graph.add_edge(srcIdx,dstIdx);
         }
 
 
     }
 
     return graph;
+}
+
+int Analytics::get_connections_per_day(Graph<string> graph, string ip)
+{
+    for(int i = 0; i < graph.get_nodes().size(); i++)
+    {
+        if(ip.compare(graph.get_nodes()[i].get_val())== 0)
+            return graph.get_nodes()[i].get_adj().size();
+    }
+    return 0;
+}
+
+void Analytics::is_most_connected(Graph<string> graph, string ip)
+{
+    int originalConnections = get_connections_per_day(graph, ip);
+    int compareConnections = -1;
+    for(int i = 0; i < graph.get_nodes().size(); i++)
+    {
+        compareConnections = get_connections_per_day(graph,graph.get_nodes()[i].get_val());
+        if(compareConnections > originalConnections)
+            {
+                std::cout<<"The IP does not have the most connections per day."<<std::endl;
+                i = graph.get_nodes().size();
+            }
+    }
+    if(originalConnections > compareConnections)
+        std::cout<<"The IP does have the most connections per day."<<std::endl;
+
+}
+
+int Analytics::get_connected_per_day(Graph<string> graph, string ip)
+{
+    int ipIdx = -1;
+    int count = 0;
+
+    for(int i = 0; i < graph.get_nodes().size(); i++)
+        if(graph.get_nodes()[i].get_val().compare(ip) == 0)
+            ipIdx = i;
+
+    for(int i = 0; i < graph.get_nodes().size(); i++)
+        if(find(graph.get_nodes()[i].get_adj().begin(),graph.get_nodes()[i].get_adj().end(),ipIdx)!=graph.get_nodes()[i].get_adj().end())
+            count++;
+   
+    return count;
+}
+
+Graph<pair<string,string>> Analytics::get_webvisits_graph()
+{
+    Graph<pair<string,string>> graph(true);
+    pair<string,string> srcVal;
+    pair<string,string> dstVal;
+    string webPort = "443";
+    string portCompare = "";
+    int srcIdx = -1;
+    int dstIdx = -1;
+    for(int i = 0; i < data.size(); i++)
+    {
+        portCompare = data[i].get_dst_port();
+
+        if(portCompare.compare(webPort)==0)
+        {
+            srcVal = make_pair(data[i].get_src_ip(),data[i].get_src_hostname());
+            dstVal = make_pair(data[i].get_dst_ip(),data[i].get_dst_hostname());
+            srcIdx = graph.add_node(srcVal);
+            dstIdx = graph.add_node(dstVal);
+            graph.add_edge(srcIdx,dstIdx);
+        }
+
+
+    }
+
+    return graph;
+}
+
+int Analytics::get_connected_to_site(Graph<pair<string,string>> graph, string webName)
+{
+    int ipIdx = -1;
+    int count = 0;
+
+    for(int i = 0; i < graph.get_nodes().size(); i++)
+        if(graph.get_nodes()[i].get_val().second.compare(webName) == 0)
+            ipIdx = i;
+
+    for(int i = 0; i < graph.get_nodes().size(); i++)
+        if(find(graph.get_nodes()[i].get_adj().begin(),graph.get_nodes()[i].get_adj().end(),ipIdx)!=graph.get_nodes()[i].get_adj().end())
+            count++;
+   
+    return count;
 }
