@@ -20,21 +20,31 @@ int main()
     }
 
     Graph<string> graph;
-    graph = my_analitic.get_connections_graph();
-
+    vector<string> dates = my_analitic.get_all_dates();
     string ip = "";
     cout<<"\nWhich IP do you want to get the connections for?"<<endl;
     cin>>ip;
-    cout<<"The amount of connections sent per day for your IP is: "<<my_analitic.get_connections_per_day(graph,ip)<<endl;
-    my_analitic.is_most_connected(graph,ip);
-    cout<<"The amount of connections recieved per day for your IP is: "<<my_analitic.get_connected_per_day(graph,ip)<<endl;
+    for(int i = 0; i<dates.size(); i++)
+    {
+        graph = my_analitic.get_connections_graph(dates[i]);
+        cout<<"The amount of connections sent on "<<dates[i]<<" for your IP is: "<<my_analitic.get_connections_per_day(graph,ip)<<endl;
+        my_analitic.is_most_connected(graph,ip);
+        cout<<"The amount of connections recieved on "<<dates[i]<<" for your IP is: "<<my_analitic.get_connected_per_day(graph,ip)<<endl;
+        cout<<endl;
+    }
+
+    
     
 
     Graph<pair<string,string>> graph2;
-    graph2 = my_analitic.get_webvisits_graph();
     string anomaly = "249krwpsl2ciatl5u8nb.ru";
-    cout<<"The amount of visits to the anomaly per day is: "<<my_analitic.get_connected_to_site(graph2,anomaly)<<endl;
     string webTraffic = "protonmail.com";
-    cout<<"The amount of visits to the website with large traffic per day is: "<<my_analitic.get_connected_to_site(graph2,webTraffic)<<endl;
+    for(int i = 0; i<dates.size();i++)
+    {
+        graph2 = my_analitic.get_webvisits_graph(dates[i]);
+        cout<<"The amount of visits to the anomaly on "<<dates[i]<<" is: "<<my_analitic.get_connected_to_site(graph2,anomaly)<<endl;
+        cout<<"The amount of visits to the website with large traffic on "<<dates[i]<<" is: "<<my_analitic.get_connected_to_site(graph2,webTraffic)<<endl;
+    }
+
 
 }

@@ -34,15 +34,12 @@ public:
 
     std::vector<std::string> get_non_domain_names();
     std::string get_domain_ip(std::string domain);
-    std::vector<std::string> get_entry_connections(std::string ip);
-    std::map<std::string,int> conexionesPorDia(std::string date);
-    std::vector<pair<string, int>> top(int n, std::string fecha);
-    std::map<std::string,int> conexionesTotal();
-    Graph<std::string> get_connections_graph();
+    Graph<std::string> get_connections_graph(std::string date);
+    std::vector<std::string> get_all_dates();
     void is_most_connected(Graph<std::string> graph, std::string ip);
     int get_connections_per_day(Graph<std::string> graph, std::string ip);
     int get_connected_per_day(Graph<std::string> graph, std::string ip);
-    Graph<std::pair<std::string,std::string>> get_webvisits_graph();
+    Graph<std::pair<std::string,std::string>> get_webvisits_graph(std::string date);
     int get_connected_to_site(Graph<std::pair<std::string,std::string>> graph, std::string ip);
 };
 

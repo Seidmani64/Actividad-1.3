@@ -81,7 +81,7 @@ Log Analytics::get_registry(int idx)
 //Metodo para recibir string del IP de un dominio
 //Tiene como parametro el nombre del dominio
 //Regresa un string del IP del dominio
-std::string Analytics::get_domain_ip(std::string domain)
+string Analytics::get_domain_ip(string domain)
 {
     std::string compareVal = "";
     for(int i = 0; i < data.size(); i++)
@@ -93,146 +93,17 @@ std::string Analytics::get_domain_ip(std::string domain)
     return "Not Found";
 }
 
-//Metodo para recibir un vector de strings de los nombres de dominio que no corresponden a reto.com
-//No tiene parametro
-//Regresa un vector de string de los nombres de dominio que no corresponden a reto.com
-std::vector<std::string> Analytics::get_non_domain_names()
+vector<string> Analytics::get_all_dates()
 {
-    std::vector<std::string> names;
-    std::string domain = "reto.com";
-    std::string computer_name;
-    std::string domain_name;
-    std::string temp_cn;
-    std::string temp_dn;
-
+    vector<string> dates;
     for(int i = 0; i < data.size(); i++)
-    {
-        computer_name = data[i].get_src_hostname();
-        domain_name = data[i].get_dst_hostname();
-        temp_cn = computer_name.substr(computer_name.find('.') + 1);
-        temp_dn = domain_name.substr(domain_name.find('.') + 1);
-        if(domain.compare(temp_cn) != 0)
-            if(computer_name != "-")
-                names.push_back(computer_name);
-        if(domain.compare(temp_dn) != 0)
-            if(domain_name != "-")
-                names.push_back(domain_name);
-
-    }
-
-    return names;
-}
-
-//Metodo para llenar una pila con las conexiones entrantes
-//Tiene como parametro un string de la ip fuente
-//Regresa una pila de conexiones entrantes(strings de ip)
-std::vector<std::string> Analytics::get_entry_connections(std::string ip)
-{
-    std::vector<std::string> connections;
-    string compareVal = "";
-    for(int i = 0; i < data.size(); i++)
-    {
-        compareVal = data[i].get_dst_ip();
-        if(compareVal == ip)
-            connections.push_back(data[i].get_src_ip());
-    }
+        if(find(dates.begin(),dates.end(),data[i].get_date())==dates.end())
+            dates.push_back(data[i].get_date());
         
-    return connections;
+    return dates;
 }
 
-
-//Metodo para recibir dominios y su cantidad de conexiones por dia
-//Toma como parametro un string de la fecha
-//Regresa un mapa de formato "dominio":"cantidad de conexiones por dia"
-std::map<std::string,int> Analytics::conexionesPorDia(std::string date)
-{
-    std::string home_domain = "reto.com";
-    std::string compare_domain;
-    std::string short_domain;
-    std::map<std::string,int> conexiones;
-    int counter;
-    for(int i = 0; i < data.size(); i++)
-    {
-        if(date.compare(data[i].get_date()) == 0)
-        {
-            counter = 0;
-            compare_domain = data[i].get_dst_hostname();
-            short_domain = compare_domain.substr(compare_domain.find('.') + 1);
-            if(short_domain.compare(home_domain) != 0)
-                if(short_domain != "-")
-                    if(conexiones.count(compare_domain) == 0)
-                    {
-                        for(int j = 0; j < data.size(); j++)
-                            if(date.compare(data[j].get_date()) == 0)
-                            {
-                                if(compare_domain == data[j].get_dst_hostname())
-                                counter++;
-                            }
-                        conexiones.insert(std::pair<string,int>(compare_domain,counter));
-                    }
-        }       
-    }
-    return conexiones;
-}
-
-// Metodo para imprimir los n sitios con mas accesos
-// Implementar un BST con la cantidad de conexiones entrantes como parámetro  
-std::vector<pair<string, int>> Analytics::top(int n, string date)
-{
-    BinarySearchTree<pair<std::string, int>> bst;
-    std::map<std::string, int> conexiones_map = conexionesPorDia(date);
-    vector<pair<string, int>> inorder;
-    vector<pair<string, int>> topN;
-
-    for (auto& i : conexiones_map)
-        bst.insert_node_recursive(i);
-    
-    bst.print_inorder_inv(n, inorder);
-
-    int count = 0;
-    for (auto& i : inorder)
-    {
-        if (count == n)
-            break;
-        
-        topN.push_back(i);
-        count++;
-    }
-
-    return topN;
-}
-
-//Metodo para recibir dominios y su cantidad de conexiones
-//No tiene parametro
-//Regresa un mapa de formato "dominio":"cantidad de conexiones"
-std::map<std::string,int> Analytics::conexionesTotal()
-{
-    std::string home_domain = "reto.com";
-    std::string compare_domain;
-    std::string short_domain;
-    std::map<std::string,int> conexiones;
-    int counter;
-    for(int i = 0; i < data.size(); i++)
-    {
-        counter = 0;
-        compare_domain = data[i].get_dst_hostname();
-        short_domain = compare_domain.substr(compare_domain.find('.') + 1);
-        if(short_domain.compare(home_domain) != 0)
-            if(short_domain != "-")
-                if(conexiones.count(compare_domain) == 0)
-                {
-                    for(int j = 0; j < data.size(); j++)
-                    {
-                        if(compare_domain == data[j].get_dst_hostname())
-                        counter++;
-                    }
-                    conexiones.insert(std::pair<std::string,int>(compare_domain,counter));
-                }
-    }    
-    return conexiones;   
-}
-
-Graph<string> Analytics::get_connections_graph()
+Graph<string> Analytics::get_connections_graph(string date)
 {
     Graph<string> graph(true);
     string ipInterna = "172.23.5.";
@@ -249,7 +120,7 @@ Graph<string> Analytics::get_connections_graph()
 
 
 
-        if(((ipSrcCompare.compare(ipInterna)==0)&&(ipDstCompare.compare(ipInterna)==0)))
+        if(((ipSrcCompare.compare(ipInterna)==0)&&(ipDstCompare.compare(ipInterna)==0))&&(data[i].get_date().compare(date)==0))
         {
             srcIdx = graph.add_node(data[i].get_src_ip());
             dstIdx = graph.add_node(data[i].get_dst_ip());
@@ -279,7 +150,8 @@ void Analytics::is_most_connected(Graph<string> graph, string ip)
     for(int i = 0; i < graph.get_nodes().size(); i++)
     {
         compareConnections = get_connections_per_day(graph,graph.get_nodes()[i].get_val());
-        if(compareConnections > originalConnections)
+        //std::cout<<"Compare connections is: "<<compareConnections<<" and originalConnections is: "<<originalConnections<<std::endl;
+        if(compareConnections >= originalConnections)
             {
                 std::cout<<"The IP does not have the most connections per day."<<std::endl;
                 i = graph.get_nodes().size();
@@ -300,13 +172,16 @@ int Analytics::get_connected_per_day(Graph<string> graph, string ip)
             ipIdx = i;
 
     for(int i = 0; i < graph.get_nodes().size(); i++)
-        if(find(graph.get_nodes()[i].get_adj().begin(),graph.get_nodes()[i].get_adj().end(),ipIdx)!=graph.get_nodes()[i].get_adj().end())
-            count++;
+        for(int j =0; j < graph.get_nodes()[i].get_adj().size();j++)
+            if(graph.get_nodes()[i].get_adj()[j]==ipIdx)
+                count++;
+        
+
    
     return count;
 }
 
-Graph<pair<string,string>> Analytics::get_webvisits_graph()
+Graph<pair<string,string>> Analytics::get_webvisits_graph(string date)
 {
     Graph<pair<string,string>> graph(true);
     pair<string,string> srcVal;
@@ -319,7 +194,7 @@ Graph<pair<string,string>> Analytics::get_webvisits_graph()
     {
         portCompare = data[i].get_dst_port();
 
-        if(portCompare.compare(webPort)==0)
+        if((portCompare.compare(webPort)==0)&&(data[i].get_date().compare(date)==0))
         {
             srcVal = make_pair(data[i].get_src_ip(),data[i].get_src_hostname());
             dstVal = make_pair(data[i].get_dst_ip(),data[i].get_dst_hostname());
