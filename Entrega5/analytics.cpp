@@ -209,11 +209,7 @@ Graph<pair<string,string>> Analytics::get_webvisits_graph(string date)
     Graph<pair<string,string>> graph(true);
     pair<string,string> srcVal;
     pair<string,string> dstVal;
-    string ipInterna = "172.23.5.";
     string webPort1 = "443";
-    string webPort2 = "465";
-    string webPort3 = "80";
-    string webPort4 = "993";
     string portCompare = "";
     int srcIdx = -1;
     int dstIdx = -1;
@@ -221,7 +217,7 @@ Graph<pair<string,string>> Analytics::get_webvisits_graph(string date)
     {
         portCompare = data[i].get_dst_port();
 
-        if(((portCompare.compare(webPort1)==0)||(portCompare.compare(webPort2)==0)||(portCompare.compare(webPort3)==0)||(portCompare.compare(webPort4)==0))&&(data[i].get_date().compare(date)==0))
+        if((portCompare.compare(webPort1)==0)&&(data[i].get_date().compare(date)==0))
         {
             srcVal = make_pair(data[i].get_src_ip(),data[i].get_src_hostname());
             dstVal = make_pair(data[i].get_dst_ip(),data[i].get_dst_hostname());
@@ -270,4 +266,50 @@ int Analytics::get_connected_to_site(Graph<pair<string,string>> graph, int idx)
 
    
     return count;
+}
+
+//Metodo para encontrar la cantidad de visitas en total de un sitio web
+//Tiene como parametro un string del hostname del sitio
+//Regresa un int de la cantidad de visitas que recibio el sitio en total
+int Analytics::get_visits_per_site(string site)
+{
+    int counter = 0;
+    for(int i = 0; i < data.size(); i++)
+    {
+        if((data[i].get_dst_port() == "443")&&(data[i].get_dst_hostname()==site))
+            counter++;
+    }
+    return counter;
+}
+
+//Metodo para encontrar todos los sitios web
+//No tiene parametro
+//Regresa un vector de strings de todos los sitios web
+vector<string> Analytics::get_all_sites()
+{
+    vector<string> sites;
+    for(int i = 0; i < data.size(); i++)
+    {
+        if(((data[i].get_dst_port() == "443")&&(find(sites.begin(),sites.end(),data[i].get_dst_hostname()) == sites.end())))
+            sites.push_back(data[i].get_dst_hostname());
+    }
+    return sites;
+}
+
+//Metodo para encontrar cual sitio fue el mas visitado
+//Tiene como parametro un vector de strings de los sitios web
+//Regresa un string del hostname del sitio web mas visitado
+string Analytics::most_visited_site(vector<string> sites)
+{
+    int max = get_visits_per_site(sites[0]);
+    string maxSite = sites[0];
+    for(int i = 0; i < sites.size()-1; i++)
+        if(max < get_visits_per_site(sites[i+1]))
+        {
+            max = get_visits_per_site(sites[i+1]);
+            maxSite = sites[i+1];
+        }
+
+
+    return maxSite;
 }

@@ -52,17 +52,17 @@ int main()
     /////////////////////////////////// Preguntas 3 y 4 ///////////////////////////////
     Graph<pair<string,string>> graph2;
     string anomaly = "249krwpsl2ciatl5u8nb.ru";
-    string webTraffic = "protonmail.com";
+    vector<string> sites = my_analitic.get_all_sites();
+    string mostVisitedSite = my_analitic.most_visited_site(sites);
     int webIdx = -1;
     for(int i = 0; i<dates.size();i++)
     {
         graph2 = my_analitic.get_webvisits_graph(dates[i]);
         webIdx = my_analitic.get_site_idx(graph2,anomaly);
         cout<<"The amount of visits to the anomaly on "<<dates[i]<<" is: "<<my_analitic.get_connected_to_site(graph2,webIdx)<<endl;
-        webIdx = my_analitic.get_site_idx(graph2,webTraffic);
+        webIdx = my_analitic.get_site_idx(graph2,mostVisitedSite);
         cout<<"The amount of visits to the website with large traffic on "<<dates[i]<<" is: "<<my_analitic.get_connected_to_site(graph2,webIdx)<<endl;
         cout<<endl;
     }
-
 
 }

@@ -42,6 +42,10 @@ public:
     Graph<std::pair<std::string,std::string>> get_webvisits_graph(std::string date);
     int get_site_idx(Graph<std::pair<std::string,std::string>> graph, std::string webName);
     int get_connected_to_site(Graph<std::pair<std::string,std::string>> graph, int idx);
+
+    int get_visits_per_site(std::string site);
+    std::vector<std::string> get_all_sites();
+    std::string most_visited_site(std::vector<std::string> sites);
 };
 
 
