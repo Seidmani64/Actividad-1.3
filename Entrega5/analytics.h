@@ -40,7 +40,8 @@ public:
     int get_connections_per_day(Graph<std::string> graph, std::string ip);
     int get_connected_per_day(Graph<std::string> graph, std::string ip);
     Graph<std::pair<std::string,std::string>> get_webvisits_graph(std::string date);
-    int get_connected_to_site(Graph<std::pair<std::string,std::string>> graph, std::string ip);
+    int get_site_idx(Graph<std::pair<std::string,std::string>> graph, std::string webName);
+    int get_connected_to_site(Graph<std::pair<std::string,std::string>> graph, int idx);
 };
 
 
