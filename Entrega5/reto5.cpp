@@ -43,7 +43,7 @@ int main()
         graph = my_analitic.get_connections_graph(dates[i]);
         cout<<"The amount of connections sent on "<<dates[i]<<" for your IP is: "<<my_analitic.get_connections_per_day(graph,ip)<<endl;
         my_analitic.is_most_connected(graph,ip);
-        cout<<"The amount of connections recieved on "<<dates[i]<<" for your IP is: "<<my_analitic.get_connected_per_day(graph,ip)<<endl;
+        cout<<"The amount of connections received on "<<dates[i]<<" for your IP is: "<<my_analitic.get_connected_per_day(graph,ip)<<endl;
         cout<<endl;
     }
 
